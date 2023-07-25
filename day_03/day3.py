@@ -10,11 +10,6 @@ for c in str:
 
 ans = 0
 
-# for line in data:
-#     size = len(line)
-#     half = int(size/2)
-#     print(half)
-
 for line in data:
     size = len(line)
     half = int(size / 2)
