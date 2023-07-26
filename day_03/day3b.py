@@ -17,10 +17,6 @@ while i in range(len(data) - 2):
     line3 = data[i + 2]
     i += 3
 
-    print("lines")
-    print(line1, line2, line3)
-    print("lines")
-
     ch = '\0'
 
     st1 = set()

@@ -14,13 +14,16 @@ for line in data:
     v3 = int(nums2[0])
     v4 = int(nums2[1])
     
-    if v1 <= v3 and v2 >= v4:
-        count += 1
-        print(v1, v3, v2, v4)
+    numer1 = []
     
-    elif v1 >= v3 and v2 <= v4:
-        count += 1
-        print(v1, v3, v2, v4)
+    for i in range(v1, v2+1):
+        numer1.append(i)
+    
+    for i in range(v3, v4+1):
+        if i in numer1:
+            count += 1
+            break
     
 print(count)
     
+
