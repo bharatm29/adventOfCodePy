@@ -1,4 +1,4 @@
-inst = open("C:/Home/misc/data/dev/adventOfCodePy/day_05/input.txt").read().split('\n')
+myInput = open("C:/Home/misc/data/dev/adventOfCodePy/day_05/input.txt").read().split('\n')
 list1 = ['J','F','C','N','D','B','W']
 list2 = ['T','S','L','Q','V','Z','P']
 list3 = ['T','J','G','B','Z','P']
@@ -14,22 +14,21 @@ data = [list1, list2, list3, list4, list5, list6, list7, list8, list9]
 for i in data:
     i.reverse()
 
-for line in inst:
+for line in myInput:
     inst = line.split(' ')
-    temp = []
     size = int(inst[1])
     src = int(inst[3]) - 1
     dest = int(inst[5]) - 1
+    temp = []
     for j in range(0, size):
         if data[src] != []:
-            for mover in data[src][size*-1], data[src][0]:
-                temp.append(mover)
-                if mover == 
-                data[src].pop()
-        data[dest].append(temp)
-        
-# main krna chahta hu ki last[size] uthha k temp mein daalde, fir pop
+            temp.append(data[src][-1])
+            data[src].pop()
+    
+    if temp != []:
+        temp.reverse()
+        for c in temp:
+            data[dest].append(c)
+            
 
-
-for i in data:
-    print(i[-1])
+for ls in data: print(ls[-1])
