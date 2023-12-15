@@ -1,8 +1,9 @@
 import os
 import aocd
 
+
 def get_data():
-    # return aocd.get_data(os.getenv("AOC"), 11, 2023).split("\n")
+    return aocd.get_data(os.getenv("AOC"), 11, 2023).split("\n")
     with open("input.txt", "r") as f:
         return f.read().split("\n")[:-1]
 
@@ -43,45 +44,6 @@ def transform_matrix(data: list[str]) -> list[list[str]]:
     return expanded_column_matrix
 
 
-def validate_cords(cord: tuple[int, int], matrix: list[list[str]]) -> bool:
-    return (
-        cord[0] >= 0
-        and cord[0] < len(matrix)
-        and cord[1] >= 0
-        and cord[1] < len(matrix[0])
-    )
-
-
-def walk(
-    current: tuple[int, int], end: tuple[int, int], matrix: list[list[str]]
-) -> int:
-    q = []
-
-    visited: list[tuple[int, int]] = []
-
-    q.append((current, 0))
-    visited.append(current)
-
-    while q:
-        ((x, y), steps) = q.pop()
-
-        if (x, y) == end:
-            return steps
-
-        for x1, y1 in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
-            new_x = x1 + x
-            new_y = y1 + y
-
-            if validate_cords((new_x, new_y), matrix) and (new_x, new_y) not in visited:
-                visited.append((new_x, new_y))
-
-                q.append(((new_x, new_y), steps + 1))
-
-                q.sort(key=lambda z: z[1], reverse=True)
-
-    return -1
-
-
 def part1(data: list[str]):
     matrix = transform_matrix(data)
 
@@ -96,7 +58,72 @@ def part1(data: list[str]):
 
     for i in range(len(cords)):
         for j in range(i, len(cords)):
-            ans += abs(cords[i][0] - cords[j][0]) + abs(cords[i][1] - cords[j][1])
+            x1 = cords[i][0]
+            x2 = cords[j][0]
+            y1 = cords[i][1]
+            y2 = cords[j][1]
+
+            ans += abs(x1 - x2) + abs(y1 - y2)
+
+    return ans
+
+
+def transform_matrix2(data: list[str]):
+    matrix: list[list[str]] = []
+
+    for line in data:
+        matrix.append(list(line))
+
+    empty_row = []
+    empty_column = []
+
+    for row_idx, row in enumerate(matrix):
+        if "#" not in row:
+            empty_row.append(row_idx)
+
+    for j in range(len(matrix[0])):
+        if "#" not in [matrix[i][j] for i in range(len(matrix))]:
+            empty_column.append(j)
+            pass
+
+    return empty_column, empty_row
+
+
+def part2(data, expansion_rate):
+    matrix: list[list[str]] = []
+
+    for line in data:
+        matrix.append(list(line))
+
+    empty_column, empty_row = transform_matrix2(data)
+
+    print(empty_column, empty_row)
+
+    cords: dict[int, tuple[int, int]] = {}
+
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            if matrix[i][j] == "#":
+                cords[len(cords)] = (i, j)
+
+    ans = 0
+
+    for i in range(len(cords)):
+        for j in range(i, len(cords)):
+            x1 = cords[i][0]
+            x2 = cords[j][0]
+            y1 = cords[i][1]
+            y2 = cords[j][1]
+
+            ans += abs(x1 - x2) + abs(y1 - y2)
+
+            for c in empty_row:
+                if min(x1, x2) <= c <= max(x1, x2):
+                    ans += int(expansion_rate - 1)
+
+            for c in empty_column:
+                if min(y1, y2) <= c <= max(y1, y2):
+                    ans += int(expansion_rate - 1)
 
     return ans
 
@@ -107,8 +134,5 @@ if __name__ == "__main__":
     p1 = part1(file_data)
     print(f"Part1: {p1}")
 
-    # p2 = part2(file_data)
-    # print("Part2: {p2}")
-
-# [1, 2, 3, 4] => 2(5), 3(6)
-# [1, 2, 5, 3, 6, 4]
+    p2 = part2(file_data, expansion_rate=1e6)
+    print(f"Part2: {p2}")
